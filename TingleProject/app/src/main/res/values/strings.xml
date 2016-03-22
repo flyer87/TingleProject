@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">Tingle</string>
+    <string name="headline">Tingle</string>
+    <string name="last_thing">Last thing addded</string>
+    <string name="heading_create">Add new thing</string>
+    <string name="what_thing">What thing</string>
+    <string name="where">Where</string>
+    <string name="list_button_text">List of all things</string>
+    <string name="delete_item">Delete</string>
+
+</resources>
