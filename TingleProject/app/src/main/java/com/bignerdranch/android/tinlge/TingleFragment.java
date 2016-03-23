@@ -1,5 +1,6 @@
 package com.bignerdranch.android.tinlge;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.Nullable;
@@ -20,10 +21,12 @@ import android.content.res.Configuration;
 import java.util.UUID;
 
 public class TingleFragment extends Fragment {
-    private Button addThing, mListActivities;
+    private Button addThing, mListActivities, mScanner;
     private TextView lastAdded;
     private TextView newWhat, newWhere;
     private static ThingLab sThingLab;
+
+    private final int REQUEST_SCAN_BARCODE = 0;
 
     public interface ToActivityOnDataStateChanged {public  void  stateChange();}
 
@@ -121,7 +124,35 @@ public class TingleFragment extends Fragment {
             mListActivities.setVisibility(View.GONE);
         }
 
+        mScanner = (Button) v.findViewById(R.id.scan_button);
+        try {
+            mScanner.setOnClickListener(
+                    new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Intent intent = new Intent("com.google.zxing.client.android.SCAN");
+                            intent.putExtra("SCAN_MODE", "PRODUCT_MODE");
+                            startActivityForResult(intent, REQUEST_SCAN_BARCODE);
+                        }
+                    }
+            );
+        } catch (Exception e) {
+            Log.i("onCreate", "Scanner Not Found", e);
+        }
+
         return  v;
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        //super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_SCAN_BARCODE){
+            if (resultCode == Activity.RESULT_OK) {
+                String content = data.getStringExtra("SCAN_RESULT");
+                newWhat.setText(content);
+                newWhere.requestFocus();
+            }
+        }
     }
 
     private void updateUI() {
